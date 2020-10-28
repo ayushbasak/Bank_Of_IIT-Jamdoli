@@ -2,7 +2,6 @@ package HelperClasses;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.Scanner;
 public class SignUp {
 	
 	//Instance Variables to store consumer details
@@ -34,35 +33,14 @@ public class SignUp {
 		this.pincode = pincode;
 		this.totalAccounts = totalAccounts;	
 	}
-	
 	public static String createSQLStatement(){
-		SignUp object = new SignUp();
-		object.createGUI();
 		
-		Scanner in = new Scanner(System.in);
-		System.out.println("Enter Your Details:\n");
-		System.out.print("NAME (20 char limit):\t");
-		String name = in.nextLine();
-		System.out.print("DOB (DD-MM-YYYY):\t");
-		String DOB = in.nextLine();
-		System.out.print("GENDER (M/F/O):\t");
-		char gender = in.nextLine().charAt(0);
-		System.out.print("ADDRESS (100 char limit):\t");
-		String address = in.nextLine();
-		System.out.print("PINCODE (7 digit):\t");
-		int pincode = in.nextInt();
+		//Important Variables
+		String SQLStatement;
+		final boolean[] correctQuery = new boolean[1];
+		correctQuery[0] = false;
+		SignUp obj = new SignUp();
 		
-		SignUp obj = new SignUp(name,DOB,gender,address,pincode,0);
-		System.out.println("Your ConsumerID is:\t" + obj.ConsumerID);
-		
-		String SQLStatement =	"INSERT INTO Consumer("
-							+	"ConsumerID,name,DOB,gender,address,pincode,totalAccounts) "
-							+	"VALUES(" + obj.ConsumerID +",\'"+ obj.name +"\',\'"+ obj.DOB + "\',\'"
-							+	obj.gender +"\',\'"+ obj.address +"\',"+ obj.pincode +","+ obj.totalAccounts+");";
-		in.close();
-		return SQLStatement;
-	}
-	void createGUI() {
 		//GUI (Swing)
 		JFrame signupFrame = new JFrame("Hello");
 		signupFrame.setSize(500,600);
@@ -113,16 +91,16 @@ public class SignUp {
 		
 		//Pincode Field
 		JLabel pincodeLabel = new JLabel("Add Pincode");
-		pincodeLabel.setBounds(20,190,200,20);
+		pincodeLabel.setBounds(20,220,200,20);
 		signupFrame.add(pincodeLabel);
 		
 		JTextField pincodeField = new JTextField();
-		pincodeField.setBounds(230,190,150,20);
+		pincodeField.setBounds(230,220,150,20);
 		signupFrame.add(pincodeField);
 		
 		//Button Field
 		JButton createConsumer = new JButton("Sign Up");
-		createConsumer.setBounds(20,240,400,40);
+		createConsumer.setBounds(20,250,400,40);
 		signupFrame.add(createConsumer);
 		
 		//DisplayField
@@ -130,11 +108,45 @@ public class SignUp {
 		display.setBounds(20,290,400,40);
 		signupFrame.add(display);
 		
+//		String query = "";
+		
 		createConsumer.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				display.setText("LOL");
+				ValidationChecks checks = new ValidationChecks();
+				correctQuery[0] = true;
+				//input and validate all fields
+				obj.name = nameField.getText();
+				obj.DOB = DOBField.getText();
+				obj.gender = GenderField.getText().charAt(0);
+				obj.address= AddressField.getText();
+				obj.pincode = Integer.parseInt(pincodeField.getText());
+				if(!checks.name(obj.name) || !checks.date(obj.DOB) || !checks.gender(obj.gender) || !checks.address(obj.address) || !checks.pincode(obj.pincode))
+					correctQuery[0] = false;
+				
+				
+				if(correctQuery[0] == false) 
+					display.setText("Unsucessfyll Query! Try again!");
+				else
+					display.setText("Query Successfully generated");
+			
+				
 			}
 		});
+		
+		if(correctQuery[0] == true) {
+			System.out.println("Your ConsumerID is:\t" + obj.ConsumerID);
+			
+			SQLStatement =	"INSERT INTO Consumer("
+								+	"ConsumerID,name,DOB,gender,address,pincode,totalAccounts) "
+								+	"VALUES(" + obj.ConsumerID +",\'"+ obj.name +"\',\'"+ obj.DOB + "\',\'"
+								+	obj.gender +"\',\'"+ obj.address +"\',"+ obj.pincode +","+ obj.totalAccounts+");";
+		}
+		else {
+			SQLStatement = "NONE";
+		}
+		return SQLStatement;
+	}
+	void createGUI() {
 	}
 	int generateConsumerID() {
 		return (int)(Math.random()*1000000);
