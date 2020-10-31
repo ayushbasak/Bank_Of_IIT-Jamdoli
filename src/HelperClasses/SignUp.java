@@ -43,21 +43,22 @@ public class SignUp {
 		
 		//GUI (Swing)
 		JFrame signupFrame = new JFrame("Hello");
-		signupFrame.setSize(500,600);
+		signupFrame.setSize(600,800);
 		signupFrame.setLayout(null);
 		signupFrame.setVisible(true);
 		signupFrame.getContentPane().setBackground(new Color(30,200,200));
+		signupFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-		JLabel header = new JLabel("Bank Of IIT-Jamdoli");
-		header.setBounds(120,40,200,20);
-		signupFrame.add(header);
-		
+//		JLabel header = new JLabel("Bank Of IIT-Jamdoli");
+//		header.setBounds(120,40,200,20);
+//		signupFrame.add(header);
+//		
 		//Name Field
 		JLabel nameLabel = new JLabel("Name (Max 20 Characters)");
 		nameLabel.setBounds(20,100,200,20);
 		signupFrame.add(nameLabel);
 	
-		JTextField nameField = new JTextField();
+		JTextField nameField = new JTextField(30);
 		nameField.setBounds(230,100,150,20);
 		signupFrame.add(nameField);
 		
@@ -66,7 +67,7 @@ public class SignUp {
 		DOBLabel.setBounds(20,130,200,20);
 		signupFrame.add(DOBLabel);
 		
-		JTextField DOBField = new JTextField();
+		JTextField DOBField = new JTextField(30);
 		DOBField.setBounds(230,130,150,20);
 		signupFrame.add(DOBField);
 		
@@ -76,7 +77,7 @@ public class SignUp {
 		GenderLabel.setBounds(20,160,200,20);
 		signupFrame.add(GenderLabel);
 		
-		JTextField GenderField = new JTextField();
+		JTextField GenderField = new JTextField(30);
 		GenderField.setBounds(230,160,150,20);
 		signupFrame.add(GenderField);
 		
@@ -85,7 +86,7 @@ public class SignUp {
 		AddressLabel.setBounds(20,190,200,20);
 		signupFrame.add(AddressLabel);
 		
-		JTextField AddressField = new JTextField();
+		JTextField AddressField = new JTextField(30);
 		AddressField.setBounds(230,190,150,20);
 		signupFrame.add(AddressField);
 		
@@ -94,7 +95,7 @@ public class SignUp {
 		pincodeLabel.setBounds(20,220,200,20);
 		signupFrame.add(pincodeLabel);
 		
-		JTextField pincodeField = new JTextField();
+		JTextField pincodeField = new JTextField(30);
 		pincodeField.setBounds(230,220,150,20);
 		signupFrame.add(pincodeField);
 		
