@@ -2,7 +2,7 @@ package HelperClasses;
 import javax.swing.*;
 import java.awt.*;
 public class GUI {
-	static Font font = new Font("Sans Serif",Font.PLAIN,20);
+	static Font font = new Font("Sans Serif",Font.PLAIN,15);
 	
 	public void redefineFrame(JFrame frame, int width, int height) {
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -24,6 +24,8 @@ public class GUI {
 		button.setFont(font);
 	}
 	public void redefineLabel(JLabel label) {
+		label.setHorizontalAlignment(SwingConstants.CENTER);
+		label.setVerticalAlignment(SwingConstants.CENTER);
 		label.setForeground(Color.WHITE);
 		label.setFont(font);
 	}
