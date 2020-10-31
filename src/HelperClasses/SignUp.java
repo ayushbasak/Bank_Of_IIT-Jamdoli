@@ -2,6 +2,7 @@ package HelperClasses;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.sql.*;
 public class SignUp {
 	
 	//Instance Variables to store consumer details
@@ -33,13 +34,12 @@ public class SignUp {
 		this.pincode = pincode;
 		this.totalAccounts = totalAccounts;	
 	}
-	public static String createSQLStatement(){
+	public static void createSQLStatement(){
 		
 		//Important Variables
-		String SQLStatement;
-		final boolean[] correctQuery = new boolean[1];
-		correctQuery[0] = false;
+
 		SignUp obj = new SignUp();
+
 		
 		//GUI (Swing)
 		JFrame signupFrame = new JFrame("Hello");
@@ -112,41 +112,50 @@ public class SignUp {
 		
 		createConsumer.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				String SQLStatement = "";
 				ValidationChecks checks = new ValidationChecks();
-				correctQuery[0] = true;
+				boolean correctQuery = true;
 				//input and validate all fields
 				obj.name = nameField.getText();
 				obj.DOB = DOBField.getText();
 				obj.gender = GenderField.getText().charAt(0);
 				obj.address= AddressField.getText();
 				obj.pincode = Integer.parseInt(pincodeField.getText());
-				if(!checks.name(obj.name) || !checks.date(obj.DOB) || !checks.gender(obj.gender) || !checks.address(obj.address) || !checks.pincode(obj.pincode))
-					correctQuery[0] = false;
+				 if(!checks.name(obj.name) || !checks.date(obj.DOB) || !checks.gender(obj.gender) || !checks.address(obj.address) || !checks.pincode(obj.pincode))
+				 	correctQuery = false;
 				
 				
-				if(correctQuery[0] == false) 
-					display.setText("Unsucessfyll Query! Try again!");
-				else
-					display.setText("Query Successfully generated");
-			
+				 if(correctQuery == false) {
+				 	display.setText("Unsucessfull Query! Try again!");
+					SQLStatement = "DELETE FROM Consumer WHERE ConsumerID < 0";
+				 }
+				 else {
+				 	display.setText("Query Successfully generated. Your ConsumerID is : " + obj.ConsumerID);
+					System.out.println("Your ConsumerID is:\t" + obj.ConsumerID);
+					
+					SQLStatement =	"INSERT INTO Consumer("
+										+	"ConsumerID,name,DOB,gender,address,pincode,totalAccounts) "
+										+	"VALUES(" + obj.ConsumerID +",\'"+ obj.name +"\',\'"+ obj.DOB + "\',\'"
+										+	obj.gender +"\',\'"+ obj.address +"\',"+ obj.pincode +","+ obj.totalAccounts+");";	 	
+				 }
+
+				try {
+					Connection con = DriverManager.getConnection("jdbc:postgresql://localhost:5432/bank","postgres","ayush0210");
+					Statement st = con.createStatement();
+					String query = SQLStatement;
+					st.executeUpdate(query);
+					
+					System.out.println("Succesfully Inserted Consumer Details ");
+				}
+				catch(Exception exception){
+					exception.printStackTrace();
+				}
 				
 			}
 		});
-		
-		if(correctQuery[0] == true) {
-			System.out.println("Your ConsumerID is:\t" + obj.ConsumerID);
-			
-			SQLStatement =	"INSERT INTO Consumer("
-								+	"ConsumerID,name,DOB,gender,address,pincode,totalAccounts) "
-								+	"VALUES(" + obj.ConsumerID +",\'"+ obj.name +"\',\'"+ obj.DOB + "\',\'"
-								+	obj.gender +"\',\'"+ obj.address +"\',"+ obj.pincode +","+ obj.totalAccounts+");";
-		}
-		else {
-			SQLStatement = "NONE";
-		}
-		return SQLStatement;
-	}
-	void createGUI() {
+	
+
+
 	}
 	int generateConsumerID() {
 		return (int)(Math.random()*1000000);
