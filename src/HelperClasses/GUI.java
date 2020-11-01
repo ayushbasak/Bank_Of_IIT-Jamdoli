@@ -1,5 +1,6 @@
 package HelperClasses;
 import javax.swing.*;
+import java.awt.event.*;
 import java.awt.*;
 public class GUI {
 	static Font font = new Font("Sans Serif",Font.PLAIN,15);
@@ -8,6 +9,15 @@ public class GUI {
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frame.setSize(width,height);
 		frame.setVisible(true);
+		frame.addWindowListener(new WindowAdapter()
+        {
+            @Override
+            public void windowClosing(WindowEvent e)
+            {
+                System.out.println("Closed");
+                e.getWindow().dispose();
+            }
+        });
 	}
 	public void redefinePanel(JPanel panel, String hexColor, int rows, int columns, int parting) {
 		GridLayout layout = new GridLayout(rows, columns);
