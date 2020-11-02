@@ -34,6 +34,17 @@ public class SQLConnection {
 		}
 		return output;
 	}
+	public static ResultSet executeQueryMultiReturn(String query) {
+		SQLConnection sql = new SQLConnection(query);
+		ResultSet res = null;
+		try {
+			res = sql.st.executeQuery(query);
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+		return res;
+	}
 	public static void executeQueryNoReturn(String query) {
 		SQLConnection sql = new SQLConnection(query);
 		try {
