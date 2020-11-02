@@ -82,7 +82,7 @@ public class Transaction {
 				obj.transactionType = transactionTypeField.getText().toUpperCase();
 				obj.amount = Integer.parseInt(amountField.getText());
 			    Date dt = new Date();
-			    SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy hh:mm");
+			    SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy HH:mm");
 				String creationDate = format.format(dt);
 				if(obj.transactionType.charAt(0) == 'D' || obj.transactionType.charAt(0) == '1') {
 					String currbalance  = SQLConnection.executeQueryWithReturn("SELECT * FROM BALANCE WHERE BANKACCOUNTNUMBER = " + obj.bankAccountNumber, 1);

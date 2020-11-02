@@ -144,7 +144,7 @@ public class SignUp {
 				 else {
 					int bankAccountNumber = generateBankAccountNumber();
 				    Date dt = new Date();
-				    SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy hh:mm");
+				    SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy HH:mm");
 					String creationDate = format.format(dt);
 				 	display.setText("Query Successfully generated. Your ConsumerID is : " + obj.ConsumerID);
 				 	accountInfo.setText("Your Bank Account Number is : " + bankAccountNumber);
