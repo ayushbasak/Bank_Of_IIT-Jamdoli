@@ -2,7 +2,7 @@ package HelperClasses;
 import javax.swing.*;
 //import java.awt.*;
 import java.awt.event.*;
-import java.sql.*;
+//import java.sql.*;
 import java.util.*;
 import java.util.Date;
 import java.text.*;
@@ -155,20 +155,14 @@ public class SignUp {
 										+	obj.gender +"\',\'"+ obj.address +"\',"+ obj.pincode + "," + obj.accountID + ");"
 										+	
 									"INSERT INTO ACCOUNTS(accountID,accountcreationdate,bankaccountnumber) "
-										+	"VALUES(" + obj.accountID + ",\'" + creationDate + "\'," + bankAccountNumber + ");";	 	
+										+	"VALUES(" + obj.accountID + ",\'" + creationDate + "\'," + bankAccountNumber + ");"
+										+
+									"INSERT INTO BALANCE(currbalance, bankaccountnumber) "
+										+	"VALUES(" + 0 + "," + bankAccountNumber + ");";	 	
 				 }
 
-				try {
-					Connection con = DriverManager.getConnection("jdbc:postgresql://localhost:5432/bank","postgres","ayush0210");
-					Statement st = con.createStatement();
-					String query = SQLStatement;
-					st.executeUpdate(query);
-					
-					System.out.println("Succesfully Inserted Consumer Details ");
-				}
-				catch(Exception exception){
-					exception.printStackTrace();
-				}
+				 
+				SQLConnection.executeQueryNoReturn(SQLStatement);
 				
 			}
 		});

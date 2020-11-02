@@ -1,7 +1,9 @@
 package HelperClasses;
 import javax.swing.*;
-import java.sql.*;
+//import java.sql.*;
 import java.awt.event.*;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 public class Transaction {
 	int bankAccountNumber;
 	String transactionType;
@@ -11,24 +13,13 @@ public class Transaction {
 
 	Transaction(int bankaccountnumber){
 		this.bankAccountNumber = bankaccountnumber;
+		String query = "SELECT * FROM ACCOUNTS WHERE BANKACCOUNTNUMBER = " + this.bankAccountNumber;
+		String result = SQLConnection.executeQueryWithReturn(query, 1);
 		
-		try {
-			Connection con = DriverManager.getConnection("jdbc:postgresql://localhost:5432/bank","postgres","ayush0210");
-			Statement st = con.createStatement();
-			String query = "SELECT * FROM ACCOUNTS WHERE BANKACCOUNTNUMBER = " + this.bankAccountNumber; 
-			ResultSet res = st.executeQuery(query);
-			
-			if(res.next()) {
-				this.accountId = res.getString(1);
-			}
-			else
-				this.accountId = "DOES NOT EXIST";
-			res.close();
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
-		
+		if(result == "NO RESULT")
+			System.exit(0);
+		else
+			this.accountId = result;
 	}
 	
 	public static void performTransaction(int accountNumber) {
@@ -79,6 +70,10 @@ public class Transaction {
 		gui.redefineButton(transactionButton, "#cf23ab", 10);
 		transactionPanel.add(transactionButton);
 		
+		//Trnsaction Status Display
+		JLabel transactionStatusDisplay = new JLabel("Trnsaction Status");
+		gui.redefineLabel(transactionStatusDisplay);
+		transactionPanel.add(transactionStatusDisplay);
 		
 		transactionButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -86,24 +81,55 @@ public class Transaction {
 				obj.destination = Integer.parseInt(destinationField.getText());
 				obj.transactionType = transactionTypeField.getText().toUpperCase();
 				obj.amount = Integer.parseInt(amountField.getText());
-				
+			    Date dt = new Date();
+			    SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy hh:mm");
+				String creationDate = format.format(dt);
 				if(obj.transactionType.charAt(0) == 'D' || obj.transactionType.charAt(0) == '1') {
+					String currbalance  = SQLConnection.executeQueryWithReturn("SELECT * FROM BALANCE WHERE BANKACCOUNTNUMBER = " + obj.bankAccountNumber, 1);
+					int balance = Integer.parseInt(currbalance);
 					
-//					try {
-//						Connection con = DriverManager.getConnection("jdbc:postgresql://localhost:5432/bank","postgres","ayush0210");
-//						Statement st = con.createStatement();
-//						String query = "INSERT INTO BALANCE()";
-//					}
-//					catch(Exception exception){
-//						exception.printStackTrace();
-//					}
-					
+					if(balance <= obj.amount) {
+						transactionStatusDisplay.setText("Insufficient Balance!");
+					}
+					else {
+						balance -= obj.amount;
+						String query = "UPDATE BALANCE SET CURRBALANCE = " + balance + " WHERE BANKACCOUNTNUMBER = " + obj.bankAccountNumber + ";"
+								+	"INSERT INTO TRANSACTION(bankaccountnumber, transactiontype, destination, date, amount) "
+								+ 	"VALUES(" + obj.bankAccountNumber + ",\'DEBIT\',0,\'" + creationDate + "\',"+obj.amount+ ");";
+						SQLConnection.executeQueryNoReturn(query);
+						transactionStatusDisplay.setText("Successfully Debited " + obj.amount + "from your account!");
+					}
 				}
 				else if(obj.transactionType.charAt(0) == 'C' || obj.transactionType.charAt(0) == '2') {
-					
+					String currbalance  = SQLConnection.executeQueryWithReturn("SELECT * FROM BALANCE WHERE BANKACCOUNTNUMBER = " + obj.bankAccountNumber, 1);
+					int balance = Integer.parseInt(currbalance);
+					balance += obj.amount;
+					String query = "UPDATE BALANCE SET CURRBALANCE = " + balance + " WHERE BANKACCOUNTNUMBER = " + obj.bankAccountNumber + ";"
+							+	"INSERT INTO TRANSACTION(bankaccountnumber, transactiontype, destination, date, amount) "
+							+ 	"VALUES(" + obj.bankAccountNumber + ",\'CREDIT\',0,\'" + creationDate + "\',"+ obj.amount + ");";
+					SQLConnection.executeQueryNoReturn(query);
+					transactionStatusDisplay.setText("Successfully Credited " + obj.amount + "to your account!");
 				}
 				else if(obj.transactionType.charAt(0) == 'T' || obj.transactionType.charAt(0) == '3') {
-					
+					String destinationExists = SQLConnection.executeQueryWithReturn("SELECT * FROM BALANCE WHERE BANKACCOUNTNUMBER = " + obj.destination,2);
+					if(destinationExists == "NO RETURN") {
+						transactionStatusDisplay.setText("INVALID DESTINATION!");
+					}
+					else {
+						int yourBalance = Integer.parseInt(SQLConnection.executeQueryWithReturn("SELECT * FROM BALANCE WHERE BANKACCOUNTNUMBER = " + obj.bankAccountNumber, 1));
+						int hisBalance = Integer.parseInt(SQLConnection.executeQueryWithReturn("SELECT * FROM BALANCE WHERE BANKACCOUNTNUMBER = " + obj.destination, 1));
+						
+						yourBalance -= obj.amount;
+						hisBalance += obj.amount;
+						
+						String query = "UPDATE BALANCE SET CURRBALANCE = " + yourBalance + " WHERE BANKACCOUNTNUMBER = " + obj.bankAccountNumber + ";"
+								+	"INSERT INTO TRANSACTION(bankaccountnumber, transactiontype, destination, date, amount) "
+								+ 	"VALUES(" + obj.bankAccountNumber + ",\'TRANSFER\',"+obj.destination+",\'" + creationDate + "\',"+ obj.amount+ ");";
+						SQLConnection.executeQueryNoReturn(query);
+						query = "UPDATE BALANCE SET CURRBALANCE = " + hisBalance + " WHERE BANKACCOUNTNUMBER = " + obj.destination;
+						SQLConnection.executeQueryNoReturn(query);
+						transactionStatusDisplay.setText("Successfully Transfered " + obj.amount + "to Account Number" + obj.destination);
+					}
 				}
 				
 			}

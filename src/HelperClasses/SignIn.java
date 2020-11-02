@@ -1,5 +1,5 @@
 package HelperClasses;
-import java.sql.*;
+//import java.sql.*;
 //import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -64,46 +64,17 @@ public class SignIn {
 				int accountId = Integer.parseInt(accountIdField.getText());
 				int accountNumber = Integer.parseInt(accountNumberField.getText());
 				
-				try {
-					Connection con = DriverManager.getConnection("jdbc:postgresql://localhost:5432/bank","postgres","ayush0210");
-					Statement st = con.createStatement();
-					String query =  "SELECT * FROM ACCOUNTS WHERE ACCOUNTID = " + accountId + " AND BANKACCOUNTNUMBER = " + accountNumber;
-					ResultSet res =  st.executeQuery(query);
-					
-					if(res.next()) {
-						signinInfo.setText("Account Exists");
-						Transaction.performTransaction(accountNumber);
-					}
-					else
-						signinInfo.setText("No such account exists!");
-					res.close();
-				}
-				catch(Exception exception){
-					exception.printStackTrace();
-				}
-				finally {
+				String query =  "SELECT * FROM ACCOUNTS WHERE ACCOUNTID = " + accountId + " AND BANKACCOUNTNUMBER = " + accountNumber;
+				String result = SQLConnection.executeQueryWithReturn(query, 1);
+				if(result == "NO RESULT")
+					signinInfo.setText("No Such Account Exists!");
+				else {
+					signinInfo.setText("Account Exists for " + result + "! Opening Transaction");
+					Transaction.performTransaction(accountNumber);
 				}
 			}
 		});
-
-//		SignIn obj = new SignIn(564314);
-		
-//		try {
-//			Connection con = DriverManager.getConnection("jdbc:postgresql://localhost:5432/bank","postgres","ayush0210");
-//			Statement st = con.createStatement();
-//			String query = "SELECT * FROM Consumer WHERE ConsumerID = " + obj.consumerID;
-//			ResultSet res =  st.executeQuery(query);
-//			
-//			while(res.next()) {
-//				System.out.println(res.getString(2));
-//			}
-//			
-//			System.out.println("Succesfully Inserted Consumer Details ");
-//		}
-//		catch(Exception exception){
-//			exception.printStackTrace();
-//		}
 	}
-	
-	
 }
+	
+
