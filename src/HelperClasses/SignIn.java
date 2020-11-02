@@ -72,6 +72,7 @@ public class SignIn {
 					
 					if(res.next()) {
 						signinInfo.setText("Account Exists");
+						Transaction.performTransaction(accountNumber);
 					}
 					else
 						signinInfo.setText("No such account exists!");
