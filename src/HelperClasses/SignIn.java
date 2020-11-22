@@ -1,34 +1,24 @@
 package HelperClasses;
-//import java.sql.*;
-//import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 public class SignIn {
 	
-	int consumerID;
-	
-	SignIn(int consumerID){
-		this.consumerID = consumerID;
-	}
-	SignIn(){
-		this.consumerID = 0;
-	}
 	
 	public static void signInRequest() {
 
 		GUI gui = new GUI();
-		JFrame signinFrame = new JFrame("Sign In");
+		JFrame signinFrame = new JFrame("SIGN IN");
 		gui.redefineFrame(signinFrame, 500, 800);
 		
 		JPanel signinPanel = new JPanel();
-		gui.redefinePanel(signinPanel, "#fc34cd", 0, 1, 20);
+		gui.redefinePanel(signinPanel, "#af2d2d", 0, 1, 20);
 		
 		// Header		
-		JLabel header = new JLabel("Sign In");
+		JLabel header = new JLabel("SIGN IN");
 		gui.redefineLabel(header);
 		
 		//AccountId field
-		JLabel accountIdLabel = new JLabel("Account ID");
+		JLabel accountIdLabel = new JLabel("ACCOUNT ID");
 		gui.redefineLabel(accountIdLabel);
 		signinPanel.add(accountIdLabel);
 		
@@ -38,7 +28,7 @@ public class SignIn {
 		
 		
 		//AccountId field
-		JLabel accountNumberLabel = new JLabel("Bank Account Number");
+		JLabel accountNumberLabel = new JLabel("BANK ACCOUNT NUMBER");
 		gui.redefineLabel(accountNumberLabel);
 		signinPanel.add(accountNumberLabel);
 		
@@ -47,12 +37,12 @@ public class SignIn {
 		signinPanel.add(accountNumberField);
 		
 		//Sign In Button
-		JButton signinButton = new JButton("Sign In");
-		gui.redefineButton(signinButton, "#349cfa", 10);
+		JButton signinButton = new JButton("SIGN IN");
+		gui.redefineButton(signinButton, "#f05454", 10);
 		signinPanel.add(signinButton);
 		
 		//Card  Details
-		JLabel signinInfo = new JLabel("Card Details");
+		JLabel signinInfo = new JLabel("");
 		gui.redefineLabel(signinInfo);
 		signinPanel.add(signinInfo);
 		
@@ -64,12 +54,13 @@ public class SignIn {
 				int accountId = Integer.parseInt(accountIdField.getText());
 				int accountNumber = Integer.parseInt(accountNumberField.getText());
 				
+//				Querying if credentials are authentic
 				String query =  "SELECT * FROM ACCOUNTS WHERE ACCOUNTID = " + accountId + " AND BANKACCOUNTNUMBER = " + accountNumber;
 				String result = SQLConnection.executeQueryWithReturn(query, 1);
-				if(result == "NO RESULT")
-					signinInfo.setText("No Such Account Exists!");
+				if(result == "NO RETURN")
+					signinInfo.setText("INVALID CREDENTIALS");
 				else {
-					signinInfo.setText("Account Exists for " + result + "! Opening Transaction");
+					signinInfo.setText("OPENING TRANSACTION BAR FOR ACCOUNT : " + result);
 					Transaction.performTransaction(accountNumber);
 				}
 			}

@@ -1,8 +1,6 @@
 package HelperClasses;
 import javax.swing.*;
-//import java.awt.*;
 import java.awt.event.*;
-//import java.sql.*;
 import java.util.*;
 import java.util.Date;
 import java.text.*;
@@ -37,6 +35,13 @@ public class SignUp {
 		this.pincode = pincode;
 		this.accountID = generateID();
 	}
+	
+	public static String filter(String s, int len) {
+		if(s.length() > len)
+				s = s.substring(0,len);
+		return s;
+	}
+	
 	public static void createSQLStatement(){
 		
 		//Creating necessary instances
@@ -45,20 +50,20 @@ public class SignUp {
 		GUI gui = new GUI();
 		
 		//GUI (Swing)
-		JFrame signupFrame = new JFrame("Sign Up: © Bank Of IIT Jamdoli");
+		JFrame signupFrame = new JFrame("SIGN UP : © BANK OF IIT JAMDOLI");
 		gui.redefineFrame(signupFrame, 600, 800);
 		
 		JPanel signupPanel = new JPanel();
-		gui.redefinePanel(signupPanel, "#fcab60", 0, 1, 20);
+		gui.redefinePanel(signupPanel, "#790c5a", 0, 1, 20);
 		
 		
-		JLabel header = new JLabel("Bank Of IIT-Jamdoli");
+		JLabel header = new JLabel("BANK OF IIT JAMDOLI");
 		gui.redefineLabel(header);
 		signupPanel.add(header);
 		
 		
 		//Name Field
-		JLabel nameLabel = new JLabel("Name (Max 20 Characters)");
+		JLabel nameLabel = new JLabel("NAME");
 		gui.redefineLabel(nameLabel);
 		signupPanel.add(nameLabel);
 	
@@ -67,7 +72,7 @@ public class SignUp {
 		signupPanel.add(nameField);
 		
 		//DOB Field
-		JLabel DOBLabel = new JLabel("DOB (dd-mm-yyyy)");
+		JLabel DOBLabel = new JLabel("DOB (DD-MM-YYYY)");
 		gui.redefineLabel(DOBLabel);
 		signupPanel.add(DOBLabel);
 		
@@ -77,7 +82,7 @@ public class SignUp {
 		
 		
 		//Gender Field
-		JLabel GenderLabel = new JLabel("Gender (M/F/O)");
+		JLabel GenderLabel = new JLabel("GENDER (M/F/O)");
 		gui.redefineLabel(GenderLabel);
 		signupPanel.add(GenderLabel);
 		
@@ -86,7 +91,7 @@ public class SignUp {
 		signupPanel.add(GenderField);
 		
 		//Address Field
-		JLabel AddressLabel = new JLabel("Address (Max 100 characters)");
+		JLabel AddressLabel = new JLabel("ADDRESS");
 		gui.redefineLabel(AddressLabel);
 		signupPanel.add(AddressLabel);
 		
@@ -95,7 +100,7 @@ public class SignUp {
 		signupPanel.add(AddressField);
 		
 		//Pin code Field
-		JLabel pincodeLabel = new JLabel("Add Pincode");
+		JLabel pincodeLabel = new JLabel("PINCODE");
 		gui.redefineLabel(pincodeLabel);
 		signupPanel.add(pincodeLabel);
 		
@@ -104,17 +109,17 @@ public class SignUp {
 		signupPanel.add(pincodeField);
 		
 		//Button Field
-		JButton createConsumer = new JButton("Sign Up");
-		gui.redefineButton(createConsumer, "#56fcab", 5);
+		JButton createConsumer = new JButton("SIGN UP");
+		gui.redefineButton(createConsumer, "#cc0e74", 5);
 		signupPanel.add(createConsumer);
 		
 		//DisplayField
-		JLabel display = new JLabel("Query Result!");
+		JLabel display = new JLabel("");
 		gui.redefineLabel(display);
 		signupPanel.add(display);
 		
 		//Account Information Field
-		JLabel accountInfo = new JLabel("Account Info");
+		JLabel accountInfo = new JLabel("");
 		gui.redefineLabel(accountInfo);
 		signupPanel.add(accountInfo);
 		
@@ -128,17 +133,17 @@ public class SignUp {
 				ValidationChecks checks = new ValidationChecks();
 				boolean correctQuery = true;
 				//input and validate all fields
-				obj.name = nameField.getText();
-				obj.DOB = DOBField.getText();
+				obj.name = filter(nameField.getText(),20);
+				obj.DOB = filter(DOBField.getText(),20);
 				obj.gender = GenderField.getText().charAt(0);
-				obj.address= AddressField.getText();
+				obj.address= filter(AddressField.getText(),100);
 				obj.pincode = Integer.parseInt(pincodeField.getText());
+//				Validate if entries are authentic
 				 if(!checks.name(obj.name) || !checks.date(obj.DOB) || !checks.gender(obj.gender) || !checks.address(obj.address) || !checks.pincode(obj.pincode))
 				 	correctQuery = false;
 				
-				
 				 if(correctQuery == false) {
-				 	display.setText("Unsucessfull Query! Try again!");
+				 	display.setText("UNSUCCESFUL QUERY");
 					SQLStatement = "DELETE FROM Consumer WHERE ConsumerID < 0";
 				 }
 				 else {
@@ -146,8 +151,8 @@ public class SignUp {
 				    Date dt = new Date();
 				    SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy HH:mm");
 					String creationDate = format.format(dt);
-				 	display.setText("Query Successfully generated. Your ConsumerID is : " + obj.ConsumerID);
-				 	accountInfo.setText("Your Bank Account Number is : " + bankAccountNumber);
+				 	display.setText("CONSUMER ID:\t" + obj.ConsumerID);
+				 	accountInfo.setText("BANK ACCOUNT NUMBER :\t" + bankAccountNumber);
 					
 					SQLStatement =	"INSERT INTO Consumer("
 										+	"ConsumerID,name,DOB,gender,address,pincode,accountid) "

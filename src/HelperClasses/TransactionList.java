@@ -19,11 +19,11 @@ public class TransactionList {
 		try {
 			while (result.next()) {
 				data[iter][0] = iter+1+"";
-				data[iter][1] = result.getString(1);
-				data[iter][2] = result.getString(2);
-				data[iter][3] = result.getString(3);
-				data[iter][4] = result.getString(4);
-				data[iter][5] = result.getString(5);
+				data[iter][1] = result.getString(1); //BANK ACCOUNT NUMBER
+				data[iter][2] = result.getString(2); //TRANSACTION TYPE 
+				data[iter][3] = result.getString(3); //DESTINATION
+				data[iter][4] = result.getString(4); //DATE
+				data[iter][5] = result.getString(5); //AMOUNT
 				iter+=1;
 			}	
 		}

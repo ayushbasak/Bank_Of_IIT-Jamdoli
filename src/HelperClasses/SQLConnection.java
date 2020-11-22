@@ -6,7 +6,7 @@ public class SQLConnection {
 	Statement st;
 	SQLConnection(String query){
 		try {
-			this.Con = DriverManager.getConnection("jdbc:postgresql://localhost:5432/bank","postgres","ayush0210");
+			this.Con = DriverManager.getConnection("jdbc:postgresql://localhost:5432/bank",/* database authentication*/"postgres","ayush0210");
 			this.st = this.Con.createStatement();
 			this.query = query;
 		}
@@ -15,6 +15,7 @@ public class SQLConnection {
 		}
 	}
 	
+//	Query With Return (eg. SELECT <Column Name> FROM <TABLE> ... 1 ROW)
 	public static String executeQueryWithReturn(String query,int columnNumber) {
 		SQLConnection sql = new SQLConnection(query);
 		String output = "";
@@ -34,6 +35,8 @@ public class SQLConnection {
 		}
 		return output;
 	}
+	
+//	Query with Multiple Rows (eg. SELECT * FROM <TABLE>)
 	public static ResultSet executeQueryMultiReturn(String query) {
 		SQLConnection sql = new SQLConnection(query);
 		ResultSet res = null;
@@ -45,6 +48,8 @@ public class SQLConnection {
 		}
 		return res;
 	}
+	
+//	Query With No Return (eg. INSERT INTO ...)
 	public static void executeQueryNoReturn(String query) {
 		SQLConnection sql = new SQLConnection(query);
 		try {
