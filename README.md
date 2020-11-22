@@ -12,11 +12,14 @@ Create a postgres database called 'bank'.
 Replace proper authentication for your root postgres in **src/HelperClasses/SQLConnection.java**
 Run the **CreateSchema.sql**  as 
 
-```psql -U <username> -d BOIJ -f <path to CreateSchema.sql>```
+```psql -U <username> -d bank -f <path to CreateSchema.sql>```
 
 ## Run
 Run the JAR executable
 
+
+#### ScreenShot
+![ScreenShot is currently not available](extra/screenshot.png)
 
 #### License
 [Apache-2.0](LICENSE)
